@@ -1,0 +1,7 @@
+strands-agents[ollama]
+
+fastapi
+uv
+uvicorn
+pydantic
+httpx
