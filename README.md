@@ -26,4 +26,4 @@ Eso arranca cuatro servicios:
 
 La app recibe `OLLAMA_HOST=http://ollama:11434`. El ejemplo que corre lo decide [`01/entrypoint.sh`](01/entrypoint.sh). Hoy es `exec python -u src/sessions/app.py`.
 
-`skills`, `hooks` y `steering` leen la consola con `input()`. Se abren con `docker compose exec -it` sobre el contenedor que ya está en marcha. El detalle está en [`01/README.md`](01/README.md).
+`skills`, `hooks` y `steering` leen la consola con `input()`. `context` y `multi-agent/as-tool` son scripts de un solo turno. Todos se abren con `docker compose exec -it` sobre el contenedor que ya está en marcha. El detalle está en [`01/README.md`](01/README.md).

@@ -26,7 +26,7 @@ exec python -u src/memory/app.py
 docker compose up --build app
 ```
 
-`wordcount` corre un prompt y el contenedor termina. `stream`, `sessions`, `mcp` y `memory` dejan un servidor en el puerto 8000. `skills`, `hooks` y `steering` son bucles de consola: el entrypoint sigue con sesiones y esos tres se abren con `docker compose exec -it`. `skills` hay que arrancarlo desde `src/skills`, y `steering` desde `src/steering`, porque `AgentSkills` busca `./skills`. Los pasos están en [docs/skills.md](docs/skills.md), [docs/hooks.md](docs/hooks.md) y [docs/steering.md](docs/steering.md).
+`wordcount`, `context` y `multi-agent/as-tool` corren un prompt y el proceso termina. `stream`, `sessions`, `mcp` y `memory` dejan un servidor en el puerto 8000. `skills`, `hooks` y `steering` son bucles de consola. El entrypoint sigue con sesiones; el resto se abre con `docker compose exec -it`. `skills` hay que arrancarlo desde `src/skills`, y `steering` desde `src/steering`, porque `AgentSkills` busca `./skills`. `as-tool` necesita la imagen reconstruida con el extra `web-fetch`. Los pasos están en las fichas de [docs/](docs/).
 
 ## Ejemplos
 
@@ -40,5 +40,7 @@ docker compose up --build app
 | [skills](docs/skills.md) | 5 | Skills en markdown y tools de atención al cliente | `AgentSkills`, `process_refund` y el bucle `input` en `src/skills/app.py` |
 | [hooks](docs/hooks.md) | 5 | Aprobación antes de borrar un archivo | `DeleteApprovalHook.check_delete` y el bucle de `interruptResponse` en `src/hooks/app.py` |
 | [steering](docs/steering.md) | 5 | Orden obligatorio del reembolso y revisión del tono | `RefundWorkflowHandler.steer_before_tool` y `ToneGuardrailHandler.steer_after_model` en `src/steering/` |
+| [context](docs/context.md) | 5 | Hora inyectada en el contexto, historial y métricas | `ContextInjector` y `result.metrics` en `src/context/app.py` |
+| [as-tool](docs/as-tool.md) | 6 | Un agente usa a otro como tool | `writer` con `tools=[researcher]` en `src/multi-agent/as-tool/app.py` |
 
-El módulo 6 (Graph, Swarm, Workflow y A2A) todavía no tiene código en `src/`. El despliegue tampoco está empezado. El detalle está en [`docs/progreso.md`](docs/progreso.md).
+`src/multi-agent/agent-swarms` y `src/multi-agent/graph-workflow` existen y no tienen archivos. Graph, Swarm, Workflow y A2A siguen sin código. El despliegue tampoco está empezado. El detalle está en [`docs/progreso.md`](docs/progreso.md).

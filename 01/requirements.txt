@@ -1,7 +1,9 @@
 strands-agents[ollama]
-
+strands-agents[web-fetch]
 fastapi
 uv
 uvicorn
 pydantic
 httpx
+tavily-python
+mcp
