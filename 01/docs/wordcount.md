@@ -2,7 +2,7 @@
 
 Agente de un solo turno que cuenta una letra, escribe el resultado en un archivo y lo muestra con `cat`.
 
-Código: [`src/wordcount/app.py`](../src/wordcount/app.py).
+Código: [`src/wordcount/app/app.py`](../src/wordcount/app/app.py). La evaluación está en [`src/wordcount/evals/test.py`](../src/wordcount/evals/test.py).
 
 ## Descripción
 
@@ -20,7 +20,7 @@ El agente decide, en un solo turno, cuántas erres hay en una palabra, guarda el
 
 La tool propia está en `letter_counter`. El docstring es el contrato que ve el modelo:
 
-```8:23:01/src/wordcount/app.py
+```8:23:01/src/wordcount/app/app.py
 @tool
 def letter_counter(word: str, letter: str) -> int:
     """
@@ -41,22 +41,22 @@ def letter_counter(word: str, letter: str) -> int:
 
 El modelo se construye aparte y el agente solo lo recibe, junto con la lista de tools:
 
-```26:31:01/src/wordcount/app.py
+```26:35:01/src/wordcount/app/app.py
 model = OllamaModel(
     host=os.environ.get("OLLAMA_HOST", "http://ollama:11434"),
     model_id="llama3.1",
 )
 agent = Agent(model=model,
 tools=[letter_counter, file_editor, shell])
+timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+if __name__ == "__main__":
+    agent(f'How many letter R\'s are in the word "strawberry"? Write the answer to answer_{timestamp}.txt. then pause for two seconds. then run "cat answer_{timestamp}.txt" to see the result.')
 ```
 
-La última línea lanza el bucle una vez, con un prompt fijo. Cuando esa llamada vuelve, el proceso termina:
+El agente se construye al importar el módulo, para que la evaluación pueda hacer `from app import agent`. La llamada al prompt solo corre cuando el archivo es el programa principal.
 
-```34:34:01/src/wordcount/app.py
-agent(f'How many letter R\'s are in the word "strawberry"? Write the answer to answer_{timestamp}.txt. then pause for two seconds. then run "cat answer_{timestamp}.txt" to see the result.')
-```
-
-`sleep` está importada al inicio del archivo. El prompt pide una pausa de dos segundos. Esa función no aparece en la lista `tools` del `Agent`.
+`sleep` está importada desde `strands.vended_tools`. El prompt pide una pausa de dos segundos. Esa función no aparece en la lista `tools` del `Agent`.
 
 ## Qué usa
 
@@ -64,21 +64,28 @@ agent(f'How many letter R\'s are in the word "strawberry"? Write the answer to a
 - Tool propia `letter_counter(word, letter)`. Si `letter` no es un solo carácter, lanza `ValueError`.
 - Tools incluidas con el SDK: `file_editor` y `shell`.
 - Prompt fijo: cuenta las erres de `"strawberry"`, escribe `answer_<fecha>.txt` y ejecuta `cat` sobre ese archivo.
+- Evaluación con `strands-agents-evals`.
 
-`sleep` está importada. El prompt pide una pausa de dos segundos. Esa tool no está en la lista que recibe el agente.
+El caso de la evaluación pide el mismo conteo, escribe `answer_2026-11-09_10:40:00.txt` y no menciona la pausa. `OrderedTools` espera `letter_counter`, luego `file_editor`, luego `shell`, y admite llamadas extra a `shell`. `Contains` comprueba que la salida incluya `3`.
 
 ## Activar
 
 En [`entrypoint.sh`](../entrypoint.sh):
 
 ```sh
-python src/wordcount/app.py
+exec python -u src/wordcount/app/app.py
 ```
 
 Desde la raíz de `ejercicios`:
 
 ```powershell
 docker compose up --build app
+```
+
+La evaluación, con el contenedor ya en marcha:
+
+```powershell
+docker compose exec -it app python -u src/wordcount/evals/test.py
 ```
 
 ## Qué esperar

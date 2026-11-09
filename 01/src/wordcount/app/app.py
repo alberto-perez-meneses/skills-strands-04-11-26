@@ -31,4 +31,5 @@ agent = Agent(model=model,
 tools=[letter_counter, file_editor, shell])
 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-agent(f'How many letter R\'s are in the word "strawberry"? Write the answer to answer_{timestamp}.txt. then pause for two seconds. then run "cat answer_{timestamp}.txt" to see the result.')
+if __name__ == "__main__":
+    agent(f'How many letter R\'s are in the word "strawberry"? Write the answer to answer_{timestamp}.txt. then pause for two seconds. then run "cat answer_{timestamp}.txt" to see the result.')

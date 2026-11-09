@@ -14,7 +14,7 @@ Código: [`src/multi-agent/as-tool/app.py`](../src/multi-agent/as-tool/app.py).
 - Tool de vendimia `web_fetch`: descarga una página y la convierte a texto. Entra en el extra `strands-agents[web-fetch]` de [`requirements.txt`](../requirements.txt).
 - Un modelo compartido: los dos agentes usan el mismo `OllamaModel`.
 
-Esto no es un Graph, un Swarm ni un servicio A2A. El orden lo decide el escritor al invocar la tool. Las carpetas `src/multi-agent/agent-swarms` y `src/multi-agent/graph-workflow` existen y todavía no tienen archivos.
+El orden lo decide el escritor al invocar la tool. El grafo con aristas fijas está en [`graph-workflow`](graph-workflow.md) y el traspaso entre agentes está en [`agent-swarms`](agent-swarms.md). Esto no publica un servicio A2A.
 
 ## Pieza de código
 
